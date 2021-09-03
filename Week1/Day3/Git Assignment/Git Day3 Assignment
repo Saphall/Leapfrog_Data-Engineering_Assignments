@@ -1,0 +1,40 @@
+1. Can we have a global .gitignore?
+=> Yes, on using git, one almost certainly create a global `.gitignore` file to ignore things which should almost never be verision controlled.
+	eg. 
+   - operating system cruft (.DS_Store, Thumbs.db)
+   - editor tempfiles and non-shared1 configuration (*.swp, .vscode)
+   -  compiled output (*.o, __pycache__, build/)
+   -  virtual environments and external dependencies (venv, node_modules)
+   - files you should rename before you commit (Untitled.ipynb)
+   - tooling caches and output (.mypy_cache)
+
+
+
+2. How to find difference between two branches?
+=> In order to compare two branches easily, you have to use the “git diff” command and provide the branch names separated by dots.
+	
+	- `$ git diff branch1..branch2`
+	
+Using this command, Git will compare the tip of both branches (also called the HEAD) and display a “diff” recap that is used to see modifications.
+
+
+
+3. How to find difference between two commits?
+=> The git diff command is commonly used to get the unstaged changes between the index and working directory. It can be also used to show changes between two arbitrary commits.
+
+	- `$ git diff <commit-id> <commit-id> `
+
+
+
+4. How to find change of a file between two commits?
+=> To view the changes between two commits, we can provide the commit hashes. The hash can be a full `SHA-1` hash or a short `SHA-1` hash or ancestry path.
+
+	- `$ git diff <SHA1> <SHA2>`
+	
+	
+
+5. How to find change of a file between two branches?
+=>  It can also be done with `git diff` command specifying the files in different branches.
+
+	- `$ git diff  mybranch/myfile.cs  master/myfile.cs`
+
