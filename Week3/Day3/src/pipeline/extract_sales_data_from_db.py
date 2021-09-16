@@ -24,10 +24,7 @@ def extract_sales_data_from_db():
 
         destination_table_name = 'raw_sales_data'
 
-        #archieve destination table before extraction
-        archieveTable(destination_database, destination_table_name)
-
-        # Empty destination table before extraction
+       # Empty destination table before extraction
         cur_destination.execute('DELETE FROM raw_sales_data;')
 
 
@@ -36,9 +33,13 @@ def extract_sales_data_from_db():
         for row in source_db_data:
             cur_destination.execute(insertSql,row)
         conn_destination.commit()
- 
-
         print('[+] Extraction Successful !')
+
+
+        #archieve destination table after extraction
+        archieveTable(destination_database, destination_table_name,'firstArchieve','../sql/extract_sales_data_archieve.sql')
+      
+
         databaseDisconnect(conn_source,cur_source)
         databaseDisconnect(conn_destination,cur_destination)
 

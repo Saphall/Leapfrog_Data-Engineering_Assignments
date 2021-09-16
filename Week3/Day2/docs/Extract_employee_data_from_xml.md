@@ -10,11 +10,11 @@ Let me explain how I did this:
 from database_connection import *
 from lxml import etree
 ```
-Here `database_connection` is the module made in pipeline directory which I have explained in [Documentation.md]() file. This helps in easy database connection.
+Here `database_connection` is the module made in pipeline directory which I have explained in [Documentation.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/docs/Documentation.md) file. This helps in easy database connection.
 `etree` from `lxml` module helps us in parsing .xml files.
 
-## 2. Funcion Defination 
-I defined the `extract_employee_data_from_xml(filePath):` function which takes `filePath` as argument. `filePath` is the location of `.xnl` file which is to be extracted into database.
+## 2. Function Defination 
+I defined the `extract_employee_data_from_xml(filePath):` function which takes `filePath` as argument. `filePath` is the location of `.xml` file which is to be extracted into database.
 ```
 def extract_employee_data_from_xml(filePath):
     .....
@@ -67,6 +67,12 @@ for i in parser.findall('Employee'):
    values = [i.find(n).text for n in columns]
 ```
 Hence we get values of parameters which are declared in `columns`.
+
+
+Lets empty this table before extraction :
+```
+cur.execute('DELETE FROM raw_employee')
+```
 
 Then `SQL query` is executed to insert data into table `raw_employee`.
 ```
