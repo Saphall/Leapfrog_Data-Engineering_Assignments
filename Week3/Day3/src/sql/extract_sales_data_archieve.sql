@@ -1,4 +1,4 @@
-INSERT INTO raw_sales_data (
+INSERT INTO raw_sales_data_archieve (
     User_id,
     username,
     Product_id,
@@ -10,5 +10,6 @@ INSERT INTO raw_sales_data (
     Sold_quantity,
     Remainig_quantity,
     Sales_date,
-    file_name)
+    file_name
+    )
     VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
