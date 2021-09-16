@@ -1,7 +1,7 @@
 > # Task to be done:
 ## Q. Write a script to extract data from a CSV files into the database.
 
-The script for this task can be found [here.](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/src/pipeline/extract_timesheet_data_from_csv.py)
+The script for this task can be found [here.](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day3_Assignment/Week3/Day2/src/pipeline/extract_timesheet_data_from_csv.py)
 
 Let me explain how I did this:
 
@@ -13,10 +13,10 @@ import csv
 from database_connection import *
 from archieveTable import archieveTable
 ```
-Here `database_connection` is the module made in pipeline directory which I have explained in [Documentation.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/docs/Documentation.md) file. This helps in easy database connection.
+Here `database_connection` is the module made in pipeline directory which I have explained in [Documentation.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day3_Assignment/Week3/Day2/docs/Documentation.md) file. This helps in easy database connection.
 Importing CSV helps to implement our .csv dataset.
 
-The `archieveTable` helps to archieve tables described in [Documentaion.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/docs/Documentation.md) as well.
+The `archieveTable` helps to archieve tables described in [Documentaion.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day3_Assignment/Week3/Day2/docs/Documentation.md) as well.
 
 ## 2. Function Defination 
 I defined the `extract_timesheet_data_from_csv(filePath):` function which takes `filePath` as argument. `filePath` is the location of `.csv` file which is to be extracted into database.
@@ -80,7 +80,7 @@ The Postgres command to load files directy into tables is called COPY.
 `psycopg2` has a method written solely for this query.
 The method to load a file into a table is called copy_from. 
 
-Hence Second solution is what is in [this script](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/src/pipeline/extract_timesheet_data_from_csv.py).
+Hence Second solution is what is in [this script](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day3_Assignment/Week3/Day2/src/pipeline/extract_timesheet_data_from_csv.py).
 
 ```
 from database_connection import *

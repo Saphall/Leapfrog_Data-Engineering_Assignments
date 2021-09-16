@@ -1,7 +1,7 @@
 > # Task to be done:
 ## Q. Write a script to extract data from a JSON file into the database.
 
-The script for this task can be found [here.](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/src/pipeline/extract_employee_data_from_json.py)
+The script for this task can be found [here.](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day3_Assignment/Week3/Day2/src/pipeline/extract_employee_data_from_json.py)
 
 Let me explain how I did this:
 
@@ -12,9 +12,9 @@ from database_connection import *;
 from psycopg2.extras import Json
 from archieveTable import archieveTable
 ```
-Here `database_connection` is the module made in pipeline directory which I have explained in [Documentation.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/docs/Documentation.md) file. This helps in easy database connection.
+Here `database_connection` is the module made in pipeline directory which I have explained in [Documentation.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day3_Assignment/Week3/Day2/docs/Documentation.md) file. This helps in easy database connection.
 
-The `archieveTable` helps to archieve tables described in [Documentaion.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/docs/Documentation.md) as well.
+The `archieveTable` helps to archieve tables described in [Documentaion.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day3_Assignment/Week3/Day2/docs/Documentation.md) as well.
 
 ## 2. Function Defination 
 I defined the `extract_employee_data_from_json(filePath)` function which takes `filePath` as argument. `filePath` is the location of `.json` file which is to be extracted into database.
@@ -81,7 +81,7 @@ After extracting the data, we archieve table as :
 ```
 archieveTable('etl_day2',table_name,filePath,'../sql/extract_raw_employee_archieve.sql')
 ```
-The `archieveTable()` functionality is described in [Documentation.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/docs/Documentation.md)
+The `archieveTable()` functionality is described in [Documentation.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day3_Assignment/Week3/Day2/docs/Documentation.md)
 
 
 Then close the connection using `databaseDisconnect(con,cur)` declared in database_connection which we imported earlier.

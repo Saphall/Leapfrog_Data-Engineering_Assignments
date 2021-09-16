@@ -25,7 +25,7 @@ def extract_sales_data_from_db():
         destination_table_name = 'raw_sales_data'
 
         # Empty destination table before extraction
-        cur_destination.execute('DELETE FROM raw_sales_data;')
+        cur_destination.execute(f'DELETE FROM {destination_table_name};')
 
 
         # Extract data into destination table
