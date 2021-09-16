@@ -1,38 +1,47 @@
 from database_connection import *
+from file_content_toString import file_content_toString
+from archieveTable import archieveTable
 
 
 def extract_sales_data_from_db():
     try:
-        conn_source = databaseConnect('sourcedb')
+        #connect to source database
+        source_database = 'sourcedb'
+        conn_source = databaseConnect(source_database)
         cur_source = conn_source.cursor()
 
-        conn_destination = databaseConnect('destinationdb')
+        #connect to destination database
+        destination_database = 'destinationdb'
+        conn_destination = databaseConnect(destination_database)
         cur_destination = conn_destination.cursor()
 
-        table_name = 'raw_sales_data'
-
-        with open ('../sql/extract_raw_sales_data_into_destination_db.sql','r') as sqlFile:
-            insert_into_destination = "".join(sqlFile.readlines())
-            # print(insert_into_destination)
-
-        #archieve the current table content
+        
+        # Select respective data from source 
+        selectSql = file_content_toString('../sql/extract_query_from_source_db.sql')
+        cur_source.execute(selectSql)
+        source_db_data = cur_source.fetchall()
         
 
-        #empty table before extraction
+        destination_table_name = 'raw_sales_data'
+
+        #archieve destination table before extraction
+        archieveTable(destination_database, destination_table_name)
+
+        # Empty destination table before extraction
         cur_destination.execute('DELETE FROM raw_sales_data;')
 
-        with open ('../sql/extract_query_from_source_db.sql','r') as sqlFile:
-            extractSql = "".join(sqlFile.readlines())
-            cur_source.execute(extractSql)
-            result = cur_source.fetchall()
-            for row in result:
-                # print(row)
-                cur_destination.execute(insert_into_destination,row)
-                conn_destination.commit()
-        
 
+        # Extract data into destination table
+        insertSql = file_content_toString('../sql/extract_raw_sales_data_into_destination_db.sql')
+        for row in source_db_data:
+            cur_destination.execute(insertSql,row)
+        conn_destination.commit()
+ 
+
+        print('[+] Extraction Successful !')
         databaseDisconnect(conn_source,cur_source)
         databaseDisconnect(conn_destination,cur_destination)
+
     except Exception as e:
         print('[-] Exception Occured:',e)
 
@@ -41,3 +50,4 @@ def extract_sales_data_from_db():
 
 if __name__ == '__main__':
     extract_sales_data_from_db()
+   
