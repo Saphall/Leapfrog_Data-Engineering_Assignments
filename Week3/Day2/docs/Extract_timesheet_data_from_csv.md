@@ -15,7 +15,7 @@ from database_connection import *
 Here `database_connection` is the module made in pipeline directory which I have explained in [Documentation.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/docs/Documentation.md) file. This helps in easy database connection.
 Importing CSV helps to implement our .csv dataset.
 
-## 2. Funcion Defination 
+## 2. Function Defination 
 I defined the `extract_timesheet_data_from_csv(filePath):` function which takes `filePath` as argument. `filePath` is the location of `.csv` file which is to be extracted into database.
 ```
 def extract_timesheet_data_from_csv(filePath):
@@ -33,6 +33,11 @@ Now I declared the table where, data are to be extraceted.
 
 ```
 tableName = 'raw_timesheet'
+```
+
+Lets empty this table before extraction :
+```
+cur.execute('DELETE FROM %s' %table_name)
 ```
 
 Now I opened the dataset file as :
@@ -77,6 +82,10 @@ def extract_timesheet_data_from_csv(filePath):
         cur = con.cursor()
 
         tableName = 'raw_timesheet'
+
+        #empty table before extraction
+        cur.execute('DELETE FROM %s' %tableName)
+
 
         with open(filePath,'r') as file:
             #skip header row

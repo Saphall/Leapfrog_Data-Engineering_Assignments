@@ -6,7 +6,7 @@ data/             # Folder containing the datasets in different formats.
   *.json
   *.csv
   *.xml 
- docs/           # Folder containing .md files for assignment.      
+docs/           # Folder containing .md files for assignment.      
    *.md
 schema/          # Folder containing different create sql quiries.
   *.sql    

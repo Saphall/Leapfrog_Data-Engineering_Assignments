@@ -1,5 +1,5 @@
 > # Task to be done:
-## Write a script to extract data from a JSON file into the database.
+## Q. Write a script to extract data from a JSON file into the database.
 
 The script for this task can be found [here.](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/src/pipeline/extract_employee_data_from_json.py)
 
@@ -11,9 +11,9 @@ import json
 from database_connection import *;
 from psycopg2.extras import Json
 ```
-Here `database_connection` is the module made in pipeline directory which I have explained in [Documentation.md]() file. This helps in easy database connection.
+Here `database_connection` is the module made in pipeline directory which I have explained in [Documentation.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/docs/Documentation.md) file. This helps in easy database connection.
 
-## 2. Funcion Defination 
+## 2. Function Defination 
 I defined the `extract_employee_data_from_json(filePath)` function which takes `filePath` as argument. `filePath` is the location of `.json` file which is to be extracted into database.
 ```
 def extract_employee_data_from_json(filePath):
@@ -60,7 +60,12 @@ Then remove the last comma and end SQL with a semicolon:
 values_str = values_str[:-2] + ";"
 ```
 
-Declare TableName as `table_name = 'raw_employee'` and execute SQL script:
+Declare TableName as `table_name = 'raw_employee'`.Lets empty this table before extraction :
+```
+cur.execute('DELETE FROM %s' %table_name)
+```
+
+And execute SQL script:
 ```
  sql = "INSERT INTO %s (%s)\n VALUES %s" %(
                 table_name,
@@ -77,7 +82,7 @@ Then close the connection using `databaseDisconnect(con,cur)` declared in databa
 if __name__ == '__main__':
     extract_employee_data_from_json('../../data/employee_2021_08_01.json')
 ```
-And the json data was extracted to `etl_day2` database !
+And the json data was extracted to `etl_day2` database and `raw_employee` table !
 
 
 

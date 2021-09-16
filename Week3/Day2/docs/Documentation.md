@@ -4,16 +4,16 @@ data/             # Folder containing the datasets in different formats.
   *.json
   *.csv
   *.xml 
- docs/           # Folder containing .md files for assignment.      
+docs/           # Folder containing .md files for assignment.      
    *.md
-schema/          # Folder containing different create sql quiries.
+schema/          # Folder containing different create sql queries.
   *.sql    
 src/
   pipeline/      # Folder containing python scripts    
     *.py
 ```
 
-## 1. Let me expalain about different sql files in schema.
+## 1. Let me explain about different sql files in schema.
 * `Schema/create_raw_employee_table.sql` file:
 ``` 
 CREATE TABLE raw_employee(
@@ -75,7 +75,7 @@ connection.close()
 cursor.close()
 ```
 
-So, to decleare this as modeule, __init__.py was created and following code was kept in this file.
+So, to declare this as module, `__init__.py` was created and following code was kept in this file.
 
 ```
 import psycopg2
