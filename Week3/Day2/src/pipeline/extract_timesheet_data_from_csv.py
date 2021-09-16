@@ -7,6 +7,9 @@ def extract_timesheet_data_from_csv(filePath):
 
         tableName = 'raw_timesheet'
 
+        #empty table before extraction
+        cur.execute('DELETE FROM %s' %tableName)
+
         with open(filePath,'r') as file:
             # reader = csv.reader(f)
             # print(reader)

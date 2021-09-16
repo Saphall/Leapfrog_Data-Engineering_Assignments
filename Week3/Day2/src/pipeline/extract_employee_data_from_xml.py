@@ -7,6 +7,9 @@ def extract_employee_data_from_xml(filePath):
         con = databaseConnect('etl_day2')
         cur = con.cursor()
         
+        # empty table before extraction
+        cur.execute('DELETE FROM raw_employee')
+
         parser = etree.parse(filePath)
         columns = ('employee_id','first_name','last_name','department_id','department_name','manager_employee_id','employee_role','salary','hire_date','terminated_date','terminated_reason','dob','fte','location')
         for i in parser.findall('Employee'):

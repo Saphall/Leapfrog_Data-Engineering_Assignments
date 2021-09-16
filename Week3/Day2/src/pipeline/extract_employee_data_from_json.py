@@ -26,10 +26,14 @@ def extract_employee_data_from_json(filePath):
        
         table_name = 'raw_employee'
         
+        #empty table before extraction
+        cur.execute('DELETE FROM %s' %table_name)
+        
         sql = "INSERT INTO %s (%s)\n VALUES %s" %(
                 table_name,
                 ', '.join(columns),
                 values_str)
+                
         cur.execute(sql)
         con.commit()
         
