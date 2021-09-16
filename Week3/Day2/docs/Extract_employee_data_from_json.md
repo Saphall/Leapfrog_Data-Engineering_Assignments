@@ -10,8 +10,11 @@ Let me explain how I did this:
 import json
 from database_connection import *;
 from psycopg2.extras import Json
+from archieveTable import archieveTable
 ```
 Here `database_connection` is the module made in pipeline directory which I have explained in [Documentation.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/docs/Documentation.md) file. This helps in easy database connection.
+
+The `archieveTable` helps to archieve tables described in [Documentaion.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/docs/Documentation.md) as well.
 
 ## 2. Function Defination 
 I defined the `extract_employee_data_from_json(filePath)` function which takes `filePath` as argument. `filePath` is the location of `.json` file which is to be extracted into database.
@@ -74,6 +77,12 @@ And execute SQL script:
 cur.execute(sql)
 con.commit()
 ```
+After extracting the data, we archieve table as :
+```
+archieveTable('etl_day2',table_name,filePath,'../sql/extract_raw_employee_archieve.sql')
+```
+The `archieveTable()` functionality is described in [Documentation.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/docs/Documentation.md)
+
 
 Then close the connection using `databaseDisconnect(con,cur)` declared in database_connection which we imported earlier.
 

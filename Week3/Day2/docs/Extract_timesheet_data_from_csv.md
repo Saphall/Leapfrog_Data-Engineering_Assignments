@@ -11,9 +11,12 @@ Let me explain how I did this:
 ```
 import csv
 from database_connection import *
+from archieveTable import archieveTable
 ```
 Here `database_connection` is the module made in pipeline directory which I have explained in [Documentation.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/docs/Documentation.md) file. This helps in easy database connection.
 Importing CSV helps to implement our .csv dataset.
+
+The `archieveTable` helps to archieve tables described in [Documentaion.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/docs/Documentation.md) as well.
 
 ## 2. Function Defination 
 I defined the `extract_timesheet_data_from_csv(filePath):` function which takes `filePath` as argument. `filePath` is the location of `.csv` file which is to be extracted into database.
@@ -51,6 +54,12 @@ with open(filePath,'r') as file:
            
         con.commit() 
 ```
+
+After extracting the data, we archieve table as :
+```
+archieveTable('etl_day2',tableName,filePath,'../sql/extract_raw_timesheet_archieve.sql')
+```
+
 Then close the connection using `databaseDisconnect(con,cur)` declared in `database_connection` which we imported earlier.
 
 ## 3. Function call with correct file-path:
@@ -75,6 +84,7 @@ Hence Second solution is what is in [this script](https://github.com/Saphall/Lea
 
 ```
 from database_connection import *
+from archieveTable import archieveTable
 
 def extract_timesheet_data_from_csv(filePath):
     try:
@@ -92,8 +102,11 @@ def extract_timesheet_data_from_csv(filePath):
             next(file)
             cur.copy_from(file,tableName,sep=',')
         con.commit() 
-
         print('[+] Extraction Successful!')
+
+        # archieve table after extraction
+        archieveTable('etl_day2',tableName,filePath,'../sql/extract_raw_timesheet_archieve.sql')
+        
         databaseDisconnect(con,cur)
     except Exception as e:
         print('[-] Exception Occured:',e)

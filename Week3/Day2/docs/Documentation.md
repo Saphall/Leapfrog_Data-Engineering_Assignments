@@ -4,17 +4,19 @@ data/             # Folder containing the datasets in different formats.
   *.json
   *.csv
   *.xml 
-docs/           # Folder containing .md files for assignment.      
-   *.md
-schema/          # Folder containing different create sql queries.
+docs/             # Folder containing .md files for assignment.      
+  *.md
+schema/           # Folder containing different create sql queries.
   *.sql    
 src/
-  pipeline/      # Folder containing python scripts    
+  pipeline/       # Folder containing python scripts    
     *.py
+  sql/            # Folder containing DQL/DML.
+    *.sql
 ```
 
 ## 1. Let me explain about different sql files in schema.
-* `Schema/create_raw_employee_table.sql` file:
+### i. `Schema/create_raw_employee_table.sql` file:
 ``` 
 CREATE TABLE raw_employee(
 	employee_id VARCHAR(500),
@@ -38,7 +40,7 @@ Here I created a table `raw_employee` with necessary columns from dataset in dat
 All entities are declared `VARCHAR(500)` because, for a bulk datas to extract, we may not delare exact datatypes which may cause problems later.
 For example: Format for date `2021-12-12` can come as `12-12-2021` and thus declaring datatypes may cause problem later. So, lets create talbe with all VARCHAR types.
 
-* `schema/create_raw_timesheet_table.sql` file:
+### ii. `schema/create_raw_timesheet_table.sql` file:
 ```
 CREATE TABLE raw_timesheet(
 	employee_id VARCHAR(500),	
@@ -52,10 +54,50 @@ CREATE TABLE raw_timesheet(
 ```
 This is SQL file to create `raw_timesheet` table according to dataset in data/.
 
-ALl entities are again declared VARCHAR for same problem above.
+### iii.  `schema/create_employee_table_archieve.sql` file:
+```
+CREATE TABLE raw_employee_archieve(
+	employee_id VARCHAR(500),
+    first_name VARCHAR(500),
+    last_name VARCHAR(500),
+    department_id VARCHAR(500),
+    department_name VARCHAR(500),
+    manager_employee_id VARCHAR(500),
+    employee_role VARCHAR(500),
+    salary VARCHAR(500),
+    hire_date VARCHAR(500),
+    terminated_date VARCHAR(500),
+    terminated_reason VARCHAR(500),
+    dob VARCHAR(500),
+    fte VARCHAR(500),
+    location VARCHAR(500),
+    file_name VARCHAR(500)
+);
+```  
+This is SQL file to create `raw_employee_archieve` table to archieve `raw_employee` table after extraction.
 
 
-## 2. `database_connection.py` file in  src/pipeline/database_connection.py.
+
+### iv.  `schema/create_timesheet_table_archieve.sql` file:
+```
+CREATE TABLE raw_timesheet_archieve(
+	employee_id VARCHAR(500),	
+	cost_center	VARCHAR(500),
+	punch_in_time VARCHAR(500),	
+	punch_out_time VARCHAR(500),	
+	punch_apply_date VARCHAR(500),	
+	hours_worked VARCHAR(500),	
+	paycode VARCHAR(500),
+    file_name VARCHAR(500)
+);
+```  
+This is SQL file to create `raw_timesheet_archieve` table to archieve `raw_timesheet` table after extraction.
+
+
+All entities are again declared VARCHAR for same problem above.
+
+
+## 2. `database_connection.py` file in  src/pipeline/ :
 
 We connect to Postgresql database regularly in each script through `psycohpg2` and use the cursor with connection.
 ```
@@ -119,3 +161,130 @@ databaseDisconnect(con,cur)
 
 Preety easy !
 
+## 3. `file_content_toString.py` file in  src/pipeline/ :
+We use the sql file in `src/pipeline/` folder for different DQL/DML queries using the built-in `open()` function as: 
+
+```
+with open (filepath,'r') as file:
+  content = "".join(file.readlines())
+```  
+Since, we use this function alot and get the content of file provided as argument as string, I created this python file so that we get the file content as string easily.
+
+The content of this file is:
+```
+try:
+    def file_content_toString(filepath):
+        with open (filepath,'r') as file:
+            content = "".join(file.readlines())
+        return content
+except Exception as e:
+        print('[-] Exception Occured:',e)
+```
+
+We can thus use this file after importing in other python file as 
+```
+from file_content_toString import file_content_toString
+```
+Then, call the function in file like :
+```
+file_content_toString('../sql/extract_query_from_source_db.sql')
+```
+
+## 4. `archieveTable.py` file in  src/pipeline/ :
+This file helps to keep the archive of table. Lets see how it works:
+
+The `archieveTable()` funcion within this file takes four arguments `database_name`, `table_name`, `file_name` and `insertArchieveSqlFilePath`.
+
+```
+archieveTable(database_name,table_name,file_name,insertArchieveSqlFilepath):
+```
+Here , 
+
+`database_name` = Name of Database which contains table to archieve
+`table_name` = Name of Table to archieve
+`file_name` = Name of file to keep as file_name in insert-into-archieve sql query like [here.](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/68ed78fdf7754809d8453bf8f16080ce54155d85/Week3/Day2/src/sql/extract_raw_timesheet_archieve.sql#L9) 
+`insertArchieveSqlFilePath` = Path of file that contains insert-into-archieve query. e.g. ['../sql/extract_raw_timesheet_archieve.sql'](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day3_Assignment/Week3/Day2/src/sql/extract_raw_timesheet_archieve.sql)
+
+Let me explain how this file helps to archieve:
+
+First of all , it connect to required database.
+```
+conn_database = databaseConnect(database_name)
+cur_database = conn_database.cursor()
+```
+Then, check whether destination table is archieved or not using the `file_name` to fetch whether there already a archieve or not.
+     
+        compare_archieve = f"select * from {table_name}_archieve where file_name ='{file_name}';"
+        cur_database.execute(compare_archieve)
+    
+        if (cur_database.fetchall()):
+                print('[-] Archieve already exists !')
+
+Else, the archieve of `table_name` is made as `table_name_archieve` using the `insertArchieveSqlFilePath` query content.
+
+```
+else:
+            extractSql = f'SELECT * from {table_name};'
+            cur_database.execute(extractSql)
+            datas = cur_database.fetchall()
+            
+            insert_into_archieveSql = file_content_toString(insertArchieveSqlFilepath)
+            for row in datas:
+                row = list(row)
+                row.append(file_name)
+                cur_database.execute(insert_into_archieveSql,row)
+                conn_database.commit()
+        
+            print(f'[+] Archieved "{table_name}" to "{table_name}_archieve" !')
+```
+
+Thus this file can be used easily to archieve any table from any database eaily with the call like:
+```
+from archieveTable import archieveTable
+
+...
+
+archieveTable(destination_database, destination_table_name,'firstArchieve','../sql/extract_sales_data_archieve.sql')
+
+```
+
+             
+## 5. Different sql files in src/sql/ :
+
+### i. `extract_raw_employee_archieve.sql` file:
+This file contains `INSERT` query to archieve `raw_employee` table into `raw_employee_archieve` data like:
+```
+INSERT INTO raw_employee_archieve(
+    employee_id ,
+    first_name ,
+    last_name ,
+    department_id ,
+    department_name ,
+    manager_employee_id ,
+    employee_role ,
+    salary ,
+    hire_date ,
+    terminated_date ,
+    terminated_reason ,
+    dob ,
+    fte ,
+    location ,
+    file_name 
+) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
+```
+
+### ii. `extract_raw_timesheet_archieve.sql` file:
+This file contains `INSERT` query to archieve `raw_timesheet` table into `raw_timesheet_archieve` data like:
+```
+INSERT INTO raw_timesheet_archieve(
+	employee_id ,	
+	cost_center	,
+	punch_in_time ,	
+	punch_out_time ,	
+	punch_apply_date ,	
+	hours_worked ,	
+	paycode ,
+    file_name 
+) 
+VALUES (%s,%s,%s,%s,%s,%s,%s,%s);
+```
