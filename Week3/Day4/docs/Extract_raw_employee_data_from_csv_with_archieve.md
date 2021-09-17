@@ -1,5 +1,5 @@
 > # Task done:
-## Extract data from a employee CSV file into the database.
+## Extract data from a employee CSV file into the database table.
 
 The script for this task can be found [here.](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day4_Assignment/Week3/Day4/src/pipeline/extract_employee_data_from_csv.py)
 

@@ -76,12 +76,76 @@ CREATE TABLE raw_employee_archieve(
 ```  
 This is SQL file to create `raw_employee_archieve` table to archieve `raw_employee` table after extraction.
 
-### iv. `schema/create_employee_table.sql` file:
+### iv.  `schema/create_timesheet_table_archieve.sql` file:
+```
+CREATE TABLE raw_timesheet_archieve(
+	employee_id VARCHAR(500),	
+	cost_center	VARCHAR(500),
+	punch_in_time VARCHAR(500),	
+	punch_out_time VARCHAR(500),	
+	punch_apply_date VARCHAR(500),	
+	hours_worked VARCHAR(500),	
+	paycode VARCHAR(500),
+    file_name VARCHAR(500)
+);
+```  
+This is SQL file to create `raw_timesheet_archieve` table to archieve `raw_timesheet` table after extraction.
+
+### v. `schema/create_department_table.sql` file:
+This file helps to create distinct `department` dimension table.
+```
+CREATE TABLE department(
+ 	id serial PRIMARY KEY,
+ 	client_department_id VARCHAR(255),
+ 	department_name VARCHAR(255)
+); 
+```
+### vi. `schema/create_employee_table.sql` file:
+This file helps to create `employee` fact table.
+```
+CREATE TABLE employee(
+id SERIAL PRIMARY KEY,
+client_employee_id VARCHAR(255),
+first_name VARCHAR(255),
+last_name VARCHAR(255),
+department_id INT,
+manager_employee_id VARCHAR(255),
+salary FLOAT,
+hire_date DATE,
+term_date DATE,
+term_reason VARCHAR(255),
+dob DATE,
+fte FLOAT,
+weekly_hours FLOAT,
+role VARCHAR(255),
+FOREIGN KEY (department_id) REFERENCES department(id) 
+);
+```
 
 
-### v. `schema/create_timesheet_table.sql` file:
-
-
+### vii. `schema/create_timesheet_table.sql` file:
+This file helps to create `timesheet` fact table.
+```
+CREATE TABLE timesheet (
+id SERIAL PRIMARY KEY,
+employee_id VARCHAR(255),
+department_id INT,
+shift_start_time TIME,
+shift_end_time TIME,
+shift_date DATE,
+shift_type VARCHAR(255),
+hours_worked FLOAT,
+attendance BOOLEAN,
+has_taken_break BOOLEAN,
+break_hour FLOAT,
+was_charge BOOLEAN,
+charge_hour FLOAT, 
+Was_on_call BOOLEAN,
+on_call_hour FLOAT,
+num_teammates_absent INT,
+FOREIGN KEY (department_id) REFERENCES department(id) 
+);
+```
 
 
 ## 2. `database_connection.py` file in  src/pipeline/ :
@@ -278,3 +342,14 @@ INSERT INTO raw_timesheet_archieve(
 ) 
 VALUES (%s,%s,%s,%s,%s,%s,%s,%s);
 ```
+
+### iii. `extract_department_from_raw.sql` file:
+This file helps to `INSERT` values to `department` dimenstion table after selecting the distinct department from `raw_employee` table.
+First, the data in table are deleted and then inserted with values.
+
+### iv. `extract_employee_from_raw.sql` file:
+This file helps us to transform data in `raw_employee` table to data of our need. 
+The data is transformed as per our need and inserted into `employee` fact table. Steps are expalined in [Extract_employee_data.md]() clearly.
+
+### v. `extract_department_from_raw.sql` file:
+This file helps us to transfrom data from `raw_timesheet` table into data of our need. First, the data of our need is seleced , then it is inserted into `timesheet` fact table. Steps are explained in [Extract_timesheet_data.md]() clearly.
