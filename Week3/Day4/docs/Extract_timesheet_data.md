@@ -1,5 +1,2 @@
-> # Task done:
-## Extract `timesheet` fact table from `raw_timesheet` table.
-
-
-
+> # Task done: 
+## Extract `timesheet` table from `raw_employee` table.

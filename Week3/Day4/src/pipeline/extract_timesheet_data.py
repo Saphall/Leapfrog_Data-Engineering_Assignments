@@ -7,7 +7,7 @@ cur = con.cursor()
 def extract_timesheet():
     try:
         cur.execute('DELETE FROM timesheet;')
-        print('[+] Timesheet Extracted from raw!')
+        
         extract_timesheet_sql = file_content_toString('../sql/extract_timesheet_from_raw.sql')
         cur.execute(extract_timesheet_sql)
         con.commit()
