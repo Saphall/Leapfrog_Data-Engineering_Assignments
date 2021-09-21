@@ -17,7 +17,6 @@ def extract_location():
 
 def extract_customers():
     try:
-        cur.execute('DELETE FROM customer;')
         extract_products_sql = file_content_toString('../sql/extract_customer_from_raw.sql')
         cur.execute(extract_products_sql)
         con.commit()

@@ -1,3 +1,4 @@
+TRUNCATE TABLE sales,customer RESTART IDENTITY;
 INSERT INTO customer
 SELECT 
     CAST(c.customer_id AS INT),

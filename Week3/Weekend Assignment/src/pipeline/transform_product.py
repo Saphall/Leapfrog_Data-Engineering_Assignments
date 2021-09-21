@@ -17,7 +17,6 @@ def extract_category():
 
 def extract_products():
     try:
-        cur.execute('DELETE FROM products;')
         extract_products_sql = file_content_toString('../sql/extract_product_from_raw.sql')
         cur.execute(extract_products_sql)
         con.commit()

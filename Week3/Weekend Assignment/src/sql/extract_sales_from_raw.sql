@@ -1,4 +1,4 @@
-DELETE FROM sales;
+TRUNCATE TABLE sales RESTART IDENTITY;
 INSERT INTO sales
 SELECT s.id, 
 CAST(s.transaction_id AS INT), 

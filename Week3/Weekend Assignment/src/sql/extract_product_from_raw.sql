@@ -1,3 +1,4 @@
+TRUNCATE TABLE sales,products RESTART IDENTITY;
 INSERT INTO products
 SELECT
 CAST(p.product_id AS INT),

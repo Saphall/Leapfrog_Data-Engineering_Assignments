@@ -1,5 +1,4 @@
-DELETE FROM sales;
-DELETE FROM employee;
+TRUNCATE TABLE sales,employee RESTART IDENTITY;
 INSERT INTO employee(employee_name)
 SELECT DISTINCT
  INITCAP(created_by) 
