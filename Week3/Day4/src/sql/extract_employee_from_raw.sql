@@ -1,3 +1,4 @@
+TRUNCATE TABLE employee RESTART IDENTITY;
 INSERT INTO employee (client_employee_id,first_name,last_name,department_id,manager_employee_id,salary,hire_date,term_date
 ,term_reason,dob,fte,weekly_hours,role)
 SELECT 

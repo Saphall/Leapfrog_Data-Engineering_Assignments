@@ -14,6 +14,5 @@ was_charge BOOLEAN,
 charge_hour FLOAT, 
 Was_on_call BOOLEAN,
 on_call_hour FLOAT,
-num_teammates_absent INT,
-FOREIGN KEY (department_id) REFERENCES department(id) 
+num_teammates_absent INT
 );

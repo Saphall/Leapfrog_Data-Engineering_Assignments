@@ -1,5 +1,5 @@
 > # Task done: 
-## Extract `employee` fact table from `raw_employee` table.
+## Extract `employee`  table from `raw_employee` table.
 
 > ### Steps followed: 
 1. Unique department id and name extracted
@@ -12,7 +12,7 @@
 8. employee id generate
 
 ---
-#### i. First, `department` dimension table was created using query from `/schema/create_department_table.sql`:
+#### i. First, `department` table was created using query from `/schema/create_department_table.sql`:
 ```
 CREATE TABLE department(
  	id serial PRIMARY KEY,
@@ -74,5 +74,5 @@ CAST(fte AS FLOAT) * 40 AS weekly_hours,
 (CASE WHEN re.employee_role LIKE '%Mgr%' OR re.employee_role LIKE '%Supv%' THEN 'Manager' ELSE 'Employee' END) AS role
 FROM raw_employee re
 JOIN department d ON 
-    re.department_id = d.client_department_id;
+    re  .department_id = d.client_department_id;
 ```

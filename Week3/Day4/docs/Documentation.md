@@ -92,7 +92,7 @@ CREATE TABLE raw_timesheet_archieve(
 This is SQL file to create `raw_timesheet_archieve` table to archieve `raw_timesheet` table after extraction.
 
 ### v. `schema/create_department_table.sql` file:
-This file helps to create distinct `department` dimension table.
+This file helps to create distinct `department` table.
 ```
 CREATE TABLE department(
  	id serial PRIMARY KEY,
@@ -101,7 +101,7 @@ CREATE TABLE department(
 ); 
 ```
 ### vi. `schema/create_employee_table.sql` file:
-This file helps to create `employee` fact table.
+This file helps to create `employee` table.
 ```
 CREATE TABLE employee(
 id SERIAL PRIMARY KEY,
@@ -124,7 +124,7 @@ FOREIGN KEY (department_id) REFERENCES department(id)
 
 
 ### vii. `schema/create_timesheet_table.sql` file:
-This file helps to create `timesheet` fact table.
+This file helps to create `timesheet` table.
 ```
 CREATE TABLE timesheet (
 id SERIAL PRIMARY KEY,
@@ -344,12 +344,12 @@ VALUES (%s,%s,%s,%s,%s,%s,%s,%s);
 ```
 
 ### iii. `extract_department_from_raw.sql` file:
-This file helps to `INSERT` values to `department` dimenstion table after selecting the distinct department from `raw_employee` table.
+This file helps to `INSERT` values to `department`  table after selecting the distinct department from `raw_employee` table.
 First, the data in table are deleted and then inserted with values.
 
 ### iv. `extract_employee_from_raw.sql` file:
 This file helps us to transform data in `raw_employee` table to data of our need. 
-The data is transformed as per our need and inserted into `employee` fact table. Steps are expalined in [Extract_employee_data.md]() clearly.
+The data is transformed as per our need and inserted into `employee` table. Steps are expalined in [Extract_employee_data.md]() clearly.
 
-### v. `extract_department_from_raw.sql` file:
-This file helps us to transfrom data from `raw_timesheet` table into data of our need. First, the data of our need is seleced , then it is inserted into `timesheet` fact table. Steps are explained in [Extract_timesheet_data.md]() clearly.
+### v. `extract_timesheet_from_raw.sql` file:
+This file helps us to transfrom data from `raw_timesheet` table into data of our need. First, the data of our need is seleced , then it is inserted into `timesheet` table. Steps are explained in [Extract_timesheet_data.md]() clearly.

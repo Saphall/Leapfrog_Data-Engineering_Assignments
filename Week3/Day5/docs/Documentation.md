@@ -52,9 +52,10 @@ This is SQL file to create `dim_period` dimension table.
 
 ### iv.  `schema/create_dim_role.sql` file:
 ```
-CREATE TABLE dim_role(
-   id serial PRIMARY KEY,
-	name varchar(255)
+CREATE TABLE dim_period(
+	id SERIAL primary key,
+	start_date DATE,
+	end_date DATE
 );
 ```  
 This is SQL file to create `dim_role` dimension table.
@@ -62,17 +63,16 @@ This is SQL file to create `dim_role` dimension table.
 ### v. `schema/dim_shift_type.sql` file:
 This file helps to create  `dim_shift_type` dimension table.
 ```
-CREATE TABLE department(
- 	id serial PRIMARY KEY,
- 	client_department_id VARCHAR(255),
- 	department_name VARCHAR(255)
-); 
+CREATE TABLE dim_shift_type(
+	id  SERIAL PRIMARY KEY,
+	name VARCHAR(12)
+);
 ```
 ### vi. `schema/create_dim_status.sql` file:
 This file helps to create `dim_status` dimension table.
 ```
 CREATE TABLE dim_status (
-	status_id INT PRIMARY KEY,
+	status_id SERIAL PRIMARY KEY,
 	status VARCHAR(10)
 );
 ```
@@ -112,12 +112,11 @@ CREATE TABLE fact_timesheet(
 	id SERIAL PRIMARY KEY,
 	employee_id INT,
 	department_id VARCHAR(200),
-	shift_start_time TIMESTAMP,
-	shift_end_time TIMESTAMP,
+	shift_start_time TIMES,
+	shift_end_time TIME,
 	shift_date DATE,
 	shift_type_id INT,
 	is_weekend BOOL,
-	time_period_id INT,
 	hours_worked NUMERIC,
 	attendance VARCHAR(10),
 	has_taken_break BOOL,
@@ -128,8 +127,7 @@ CREATE TABLE fact_timesheet(
 	on_call_hour FLOAT,
 	num_teammates_absent NUMERIC,
 	foreign key (employee_id) references fact_employee(employee_id),
-	FOREIGN KEY (shift_type_id) REFERENCES dim_shift_type(id),
-	FOREIGN KEY (time_period_id) REFERENCES dim_period(id)
+	FOREIGN KEY (shift_type_id) REFERENCES dim_shift_type(id)
 	);
 ```
 
@@ -227,69 +225,7 @@ Then, call the function in file like :
 file_content_toString('../sql/extract_query_from_source_db.sql')
 ```
 
-## 4. `archieveTable.py` file in  src/pipeline/ :
-This file helps to keep the archive of table. Lets see how it works:
-
-The `archieveTable()` funcion within this file takes four arguments `database_name`, `table_name`, `file_name` and `insertArchieveSqlFilePath`.
-
-```
-archieveTable(database_name,table_name,file_name,insertArchieveSqlFilepath):
-```
-Here , 
-
-`database_name` = Name of Database which contains table to archieve
-
-`table_name` = Name of Table to archieve
-
-`file_name` = Name of file to keep as file_name in insert-into-archieve sql query.
-
-`insertArchieveSqlFilePath` = Path of file that contains insert-into-archieve query.
-
-Let me explain how this file helps to archieve:
-
-First of all , it connect to required database.
-```
-conn_database = databaseConnect(database_name)
-cur_database = conn_database.cursor()
-```
-Then, check whether destination table is archieved or not using the `file_name` to fetch whether there already a archieve or not.
-     
-        compare_archieve = f"select * from {table_name}_archieve where file_name ='{file_name}';"
-        cur_database.execute(compare_archieve)
-    
-        if (cur_database.fetchall()):
-                print('[-] Archieve already exists !')
-
-Else, the archieve of `table_name` is made as `table_name_archieve` using the `insertArchieveSqlFilePath` query content.
-
-```
-else:
-            extractSql = f'SELECT * from {table_name};'
-            cur_database.execute(extractSql)
-            datas = cur_database.fetchall()
-            
-            insert_into_archieveSql = file_content_toString(insertArchieveSqlFilepath)
-            for row in datas:
-                row = list(row)
-                row.append(file_name)
-                cur_database.execute(insert_into_archieveSql,row)
-                conn_database.commit()
-        
-            print(f'[+] Archieved "{table_name}" to "{table_name}_archieve" !')
-```
-
-Thus this file can be used easily to archieve any table from any database eaily with the call like:
-```
-from archieveTable import archieveTable
-
-...
-
-archieveTable(destination_database, destination_table_name,filePath,'../sql/extract_raw_timesheet_archieve.sql')
-
-```
-
-
-## 5. Different sql files in src/sql/ :
+## 4. Different sql files in src/sql/ :
 
 ### i. `extract_dim_department.sql` file:
 This file contains `INSERT` query to extract `department` table into `dim_department` table.
@@ -314,3 +250,5 @@ This file helps to `INSERT` values to `fact_employee` fact table.
 
 ### viii. `extract_fact_timesheet.sql` file:
 This file helps to `INSERT` values to `fact_timesheet` fact table.
+
+Detail process of load is explained in [Load_dimensions_and_facts.md]() file.

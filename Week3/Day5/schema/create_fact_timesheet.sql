@@ -2,12 +2,11 @@ CREATE TABLE fact_timesheet(
 	id SERIAL PRIMARY KEY,
 	employee_id INT,
 	department_id VARCHAR(200),
-	shift_start_time TIMESTAMP,
-	shift_end_time TIMESTAMP,
+	shift_start_time TIMES,
+	shift_end_time TIME,
 	shift_date DATE,
 	shift_type_id INT,
 	is_weekend BOOL,
-	time_period_id INT,
 	hours_worked NUMERIC,
 	attendance VARCHAR(10),
 	has_taken_break BOOL,
@@ -18,6 +17,5 @@ CREATE TABLE fact_timesheet(
 	on_call_hour FLOAT,
 	num_teammates_absent NUMERIC,
 	foreign key (employee_id) references fact_employee(employee_id),
-	FOREIGN KEY (shift_type_id) REFERENCES dim_shift_type(id),
-	FOREIGN KEY (time_period_id) REFERENCES dim_period(id)
+	FOREIGN KEY (shift_type_id) REFERENCES dim_shift_type(id)
 	);
