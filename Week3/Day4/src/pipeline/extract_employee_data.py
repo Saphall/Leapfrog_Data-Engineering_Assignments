@@ -17,7 +17,6 @@ def extract_department():
 
 def extract_employee():
     try:
-        cur.execute('DELETE FROM employee;')
         extract_employee_sql = file_content_toString('../sql/extract_employee_from_raw.sql')
         cur.execute(extract_employee_sql)
         con.commit()
