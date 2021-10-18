@@ -16,6 +16,7 @@ src/
 ```
 
 ## 1. Let me explain about different sql files in schema.
+
 ### i. `Schema/create_raw_employee_table.sql` file:
 ``` 
 CREATE TABLE raw_employee(
