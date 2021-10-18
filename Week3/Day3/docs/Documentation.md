@@ -16,86 +16,50 @@ src/
 ```
 
 ## 1. Let me explain about different sql files in schema.
+* `create_source_table_with_data.sql` file:
+This file contains the SQL queries to create a example source-tables with data in Source Database. The content of this file is [here.](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day3_Assignment/Week3/Day3/schema/create_source_table_with_data.sql)
 
-### i. `Schema/create_raw_employee_table.sql` file:
-``` 
-CREATE TABLE raw_employee(
-	employee_id VARCHAR(500),
-    first_name VARCHAR(500),
-    last_name VARCHAR(500),
-    department_id VARCHAR(500),
-    department_name VARCHAR(500),
-    manager_employee_id VARCHAR(500),
-    employee_role VARCHAR(500),
-    salary VARCHAR(500),
-    hire_date VARCHAR(500),
-    terminated_date VARCHAR(500),
-    terminated_reason VARCHAR(500),
-    dob VARCHAR(500),
-    fte VARCHAR(500),
-    location VARCHAR(500)
+* `create_raw_sales_data_table.sql` file:
+```
+CREATE TABLE raw_sales_data(
+User_id VARCHAR(500),
+username VARCHAR(500),
+Product_id VARCHAR(500),
+Product_name VARCHAR(500),
+category_id VARCHAR(500),
+category_name VARCHAR(500),
+Current_price VARCHAR(500),
+Sold_price VARCHAR(500),
+Sold_quantity VARCHAR(500),
+Remainig_quantity VARCHAR(500),
+Sales_date VARCHAR(500)
 );
 ```
-Here I created a table `raw_employee` with necessary columns from dataset in data/.
+Here I created a table `raw_sales_data` in Destination Database with necessary columns to extract data fetched from Source Database.
 
 All entities are declared `VARCHAR(500)` because, for a bulk datas to extract, we may not delare exact datatypes which may cause problems later.
 For example: Format for date `2021-12-12` can come as `12-12-2021` and thus declaring datatypes may cause problem later. So, lets create talbe with all VARCHAR types.
 
-### ii. `schema/create_raw_timesheet_table.sql` file:
+* `create_raw_sales_data_archieve_table.sql` file: 
 ```
-CREATE TABLE raw_timesheet(
-	employee_id VARCHAR(500),	
-	cost_center	VARCHAR(500),
-	punch_in_time VARCHAR(500),	
-	punch_out_time VARCHAR(500),	
-	punch_apply_date VARCHAR(500),	
-	hours_worked VARCHAR(500),	
-	paycode VARCHAR(500)
+CREATE TABLE raw_sales_data_archieve(
+User_id VARCHAR(500),
+username VARCHAR(500),
+Product_id VARCHAR(500),
+Product_name VARCHAR(500),
+category_id VARCHAR(500),
+category_name VARCHAR(500),
+Current_price VARCHAR(500),
+Sold_price VARCHAR(500),
+Sold_quantity VARCHAR(500),
+Remainig_quantity VARCHAR(500),
+Sales_date VARCHAR(500),
+file_name VARCHAR(500)
 );
 ```
-This is SQL file to create `raw_timesheet` table according to dataset in data/.
+Here I created a archieve table to archive a copy of the raw data after extraction. The `file_name` is the name of archieve file which helps to keep track of our archieve.
 
-### iii.  `schema/create_employee_table_archieve.sql` file:
-```
-CREATE TABLE raw_employee_archieve(
-	employee_id VARCHAR(500),
-    first_name VARCHAR(500),
-    last_name VARCHAR(500),
-    department_id VARCHAR(500),
-    department_name VARCHAR(500),
-    manager_employee_id VARCHAR(500),
-    employee_role VARCHAR(500),
-    salary VARCHAR(500),
-    hire_date VARCHAR(500),
-    terminated_date VARCHAR(500),
-    terminated_reason VARCHAR(500),
-    dob VARCHAR(500),
-    fte VARCHAR(500),
-    location VARCHAR(500),
-    file_name VARCHAR(500)
-);
-```  
-This is SQL file to create `raw_employee_archieve` table to archieve `raw_employee` table after extraction.
-
-
-
-### iv.  `schema/create_timesheet_table_archieve.sql` file:
-```
-CREATE TABLE raw_timesheet_archieve(
-	employee_id VARCHAR(500),	
-	cost_center	VARCHAR(500),
-	punch_in_time VARCHAR(500),	
-	punch_out_time VARCHAR(500),	
-	punch_apply_date VARCHAR(500),	
-	hours_worked VARCHAR(500),	
-	paycode VARCHAR(500),
-    file_name VARCHAR(500)
-);
-```  
-This is SQL file to create `raw_timesheet_archieve` table to archieve `raw_timesheet` table after extraction.
-
-
-All entities are again declared VARCHAR for same problem above.
+ALl entities are again declared VARCHAR for same problem above.
 
 
 ## 2. `database_connection.py` file in  src/pipeline/ :
@@ -203,8 +167,8 @@ Here ,
 
 `database_name` = Name of Database which contains table to archieve
 `table_name` = Name of Table to archieve
-`file_name` = Name of file to keep as file_name in insert-into-archieve sql query like [here.](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/68ed78fdf7754809d8453bf8f16080ce54155d85/Week3/Day2/src/sql/extract_raw_timesheet_archieve.sql#L9) 
-`insertArchieveSqlFilePath` = Path of file that contains insert-into-archieve query. e.g. ['../sql/extract_raw_timesheet_archieve.sql'](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day3_Assignment/Week3/Day2/src/sql/extract_raw_timesheet_archieve.sql)
+`file_name` = Name of file to keep as file_name in insert-into-archieve sql query like [here.](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/68ed78fdf7754809d8453bf8f16080ce54155d85/Week3/Day3/src/sql/extract_sales_data_archieve.sql#L13) 
+`insertArchieveSqlFilePath` = Path of file that contains insert-into-archieve query. e.g. ['../sql/extract_sales_data_archieve.sql'](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day3_Assignment/Week3/Day3/src/sql/extract_sales_data_archieve.sql)
 
 Let me explain how this file helps to archieve:
 
@@ -249,43 +213,67 @@ archieveTable(destination_database, destination_table_name,'firstArchieve','../s
 
 ```
 
-             
+
 ## 5. Different sql files in src/sql/ :
 
-### i. `extract_raw_employee_archieve.sql` file:
-This file contains `INSERT` query to archieve `raw_employee` table into `raw_employee_archieve` data like:
+### i. `extract_query_from_source_db.sql` file:
+This file contains `SELECT` query to fetch necessary data from source database table.
 ```
-INSERT INTO raw_employee_archieve(
-    employee_id ,
-    first_name ,
-    last_name ,
-    department_id ,
-    department_name ,
-    manager_employee_id ,
-    employee_role ,
-    salary ,
-    hire_date ,
-    terminated_date ,
-    terminated_reason ,
-    dob ,
-    fte ,
-    location ,
-    file_name 
-) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
+SELECT u.id as User_id,
+		u.username,
+		p.id as Product_id,
+		p."name" as Product_name,
+		c.id as category_id,
+		c."name" as category_name,
+		p.price as Current_price,
+		s.price as Sold_price,
+		s.quantity as Sold_quantity,
+		(p.quantity - s.quantity) as Remaining_quantity,
+		s.updated_at as Sales_date
+FROM users u 
+JOIN sales s on 
+	u.id = s.user_id 
+JOIN products p on
+	s.product_id = p.id 
+JOIN categories c on
+	p.category_id = c.id ;
 ```
 
-### ii. `extract_raw_timesheet_archieve.sql` file:
-This file contains `INSERT` query to archieve `raw_timesheet` table into `raw_timesheet_archieve` data like:
+### ii. `extract_raw_sales_data_into_destination_db.sql` file:
+This file contains `INSERT` query to insert data ,selected from source, to destination database table.
 ```
-INSERT INTO raw_timesheet_archieve(
-	employee_id ,	
-	cost_center	,
-	punch_in_time ,	
-	punch_out_time ,	
-	punch_apply_date ,	
-	hours_worked ,	
-	paycode ,
-    file_name 
-) 
-VALUES (%s,%s,%s,%s,%s,%s,%s,%s);
-```
+INSERT INTO raw_sales_data (
+    User_id,
+    username,
+    Product_id,
+    Product_name,
+    category_id,
+    category_name,
+    Current_price,
+    Sold_price,
+    Sold_quantity,
+    Remainig_quantity,
+    Sales_date)
+    VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+  ```
+
+  ### iii.`extract_sales_data_archieve.sql` file:
+  This file contains `INSERT` query to archieve `raw_sales_data` table into `raw_sales_data_archieve` data like:
+  ```
+  INSERT INTO raw_sales_data_archieve (
+    User_id,
+    username,
+    Product_id,
+    Product_name,
+    category_id,
+    category_name,
+    Current_price,
+    Sold_price,
+    Sold_quantity,
+    Remainig_quantity,
+    Sales_date,
+    file_name
+    )
+    VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+
+  ```

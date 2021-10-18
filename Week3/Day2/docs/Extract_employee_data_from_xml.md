@@ -1,7 +1,7 @@
 > # Task to be done:
 ## Q. Write a script to extract data from a XML file into the database.
 
-The script for this task can be found [here.](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/src/pipeline/extract_employee_data_from_xml.py)
+The script for this task can be found [here.](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day3_Assignment/Week3/Day2/src/pipeline/extract_employee_data_from_xml.py)
 
 Let me explain how I did this:
 
@@ -9,9 +9,13 @@ Let me explain how I did this:
 ```
 from database_connection import *
 from lxml import etree
+from archieveTable import archieveTable
 ```
-Here `database_connection` is the module made in pipeline directory which I have explained in [Documentation.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day2_Assignment/Week3/Day2/docs/Documentation.md) file. This helps in easy database connection.
+Here `database_connection` is the module made in pipeline directory which I have explained in [Documentation.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day3_Assignment/Week3/Day2/docs/Documentation.md) file. This helps in easy database connection.
 `etree` from `lxml` module helps us in parsing .xml files.
+
+The `archieveTable` helps to archieve tables described in [Documentaion.md](https://github.com/Saphall/Leapfrog_Data-Engineering_Assignments/blob/Day3_Assignment/Week3/Day2/docs/Documentation.md) as well.
+
 
 ## 2. Function Defination 
 I defined the `extract_employee_data_from_xml(filePath):` function which takes `filePath` as argument. `filePath` is the location of `.xml` file which is to be extracted into database.
@@ -81,6 +85,13 @@ sql = '''INSERT INTO raw_employee VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
 cur.execute(sql,values)
 con.commit()
 ```
+
+After extracting the data, we archieve table as :
+```
+ archieveTable('etl_day2','raw_employee',filePath,'../sql/extract_raw_employee_archieve.sql')
+ ```
+
+
 Then close the connection using `databaseDisconnect(con,cur)` declared in database_connection which we imported earlier.
 
 ## 3. Function call with correct file-path:

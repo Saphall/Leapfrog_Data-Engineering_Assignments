@@ -1,19 +1,20 @@
 from database_connection import *
 from lxml import etree
-
+from archieveTable import archieveTable
 
 def extract_employee_data_from_xml(filePath):
     try:
         con = databaseConnect('etl_day2')
         cur = con.cursor()
-        
+
+             
         # empty table before extraction
         cur.execute('DELETE FROM raw_employee')
 
         parser = etree.parse(filePath)
         columns = ('employee_id','first_name','last_name','department_id','department_name','manager_employee_id','employee_role','salary','hire_date','terminated_date','terminated_reason','dob','fte','location')
         for i in parser.findall('Employee'):
-        #    print(i)
+            # print(i)
             values = [i.find(n).text for n in columns]
             # print(p)
     
@@ -21,8 +22,11 @@ def extract_employee_data_from_xml(filePath):
 
             cur.execute(sql,values)
             con.commit()
-
         print('[+] Extraction Successful!')
+
+        # archieve table after extraction
+        archieveTable('etl_day2','raw_employee',filePath,'../sql/extract_raw_employee_archieve.sql')
+
         databaseDisconnect(con,cur)
 
     except Exception as e:

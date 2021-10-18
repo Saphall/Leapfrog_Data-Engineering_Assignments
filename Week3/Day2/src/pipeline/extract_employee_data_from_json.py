@@ -1,6 +1,7 @@
 import json
 from database_connection import *;
 from psycopg2.extras import Json
+from archieveTable import archieveTable
 
 def extract_employee_data_from_json(filePath):
     try:
@@ -25,8 +26,8 @@ def extract_employee_data_from_json(filePath):
         values_str = values_str[:-2] + ";"
        
         table_name = 'raw_employee'
-        
-        #empty table before extraction
+
+        # empty table before extraction
         cur.execute('DELETE FROM %s' %table_name)
         
         sql = "INSERT INTO %s (%s)\n VALUES %s" %(
@@ -36,8 +37,11 @@ def extract_employee_data_from_json(filePath):
                 
         cur.execute(sql)
         con.commit()
-        
         print('[+] Extraction Successful !')
+
+        # archieve table after extraction
+        archieveTable('etl_day2',table_name,filePath,'../sql/extract_raw_employee_archieve.sql')
+
         databaseDisconnect(con,cur)
 
     except Exception as e:
