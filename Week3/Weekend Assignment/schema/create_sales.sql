@@ -1,0 +1,20 @@
+CREATE TABLE sales(
+    id VARCHAR(500),
+    transaction_id INT,
+    bill_no INT,
+    bill_date TIMESTAMP,
+    customer_id INT,
+    product_id INT,
+    qty INT,
+    gross_price FLOAT,
+    tax_pc FLOAT,
+    tax_amt FLOAT,
+    discount_pc FLOAT,
+    discount_amt FLOAT,
+    net_bill_amt FLOAT,
+    employee INT,
+    created_date TIMESTAMP,
+    FOREIGN KEY (employee_id) REFERENCES employee(id),
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
+);

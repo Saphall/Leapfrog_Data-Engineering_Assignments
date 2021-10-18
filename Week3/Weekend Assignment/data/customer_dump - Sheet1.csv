@@ -1,0 +1,21 @@
+customer_id,user_name,first_name,last_name,country,town,active
+1,jvn_dhl,Jeevan,Dahal,Nepal,Kathmandu,Y
+2,prm_gtm,Pramod,Gautam,Nepal,Pokhara,Y
+3,jwn_nrl,Jiwan,Niroula,Nepal,Kathmandu,Y
+4,rzn_rai,Raazan,Rai,Nepal,Pokhara,Y
+5,tej_prj,Tej,Parajuli,Nepal,Kathmandu,Y
+6,prbt_gtm,Prabhat,Gautam,Nepal,Hetauda,Y
+7,smr_slwl,Samir,Silwal,Nepal,Kathmandu,Y
+8,srj_rana,Saroj,Rana,Nepal,Kathmandu,Y
+9,spa_pya,Spandan,Pyakurel,Nepal,Hetauda,Y
+10,sum_shr,Suman,Shrestha,Nepal,Kathmandu,Y
+11,ani_ach,Anima,Acharya,Nepal,Hetauda,Y
+12,kri_rai,Krishna,Rai,Nepal,Kathmandu,Y
+13,sam_dah,Samana,Dahal,Nepal,Pokhara,Y
+14,san_sha,Sandhya,Sahi,nepal,Kathmandu,Y
+15,pun_dwl,Punya Ram,Duwal,nepal,Pokhara,Y
+16,anis_slwl,Anish,Silwal _,nepal,Hetauda,Y
+17,sap_sag,Sagun,Sapkota,Nepal,Pokhara,Y
+18,nir_prdn,Niraj,Pradhan,nepal,Lalitpur,Y
+19,shr_viv,Vivek,Shrestha,nepal,Kathmandu,Y
+20,sms,Sudeep,Shrestha,nepal,Kathmandu,Y
